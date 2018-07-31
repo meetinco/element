@@ -115,7 +115,11 @@ const DEFAULT_RENDER_CELL = function(h, { row, column, $index }) {
     return column.formatter(row, column, value, $index);
   }
 
-  return value || column.emptyText || '';
+  // value === 0, 显示不出来
+  if (value === null || value === undefined) {
+    return column.emptyText || '';
+  }
+  return value;
 };
 
 const parseWidth = (width) => {

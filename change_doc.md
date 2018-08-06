@@ -41,6 +41,16 @@
     ----|----|----|----|----
     decimal | 小数位数限制 | number | — | null 
 
+6. popover 组件新增 mask 蒙版
+    Popover Attributes
+    参数 | 说明 | 类型 | 可选值 | 默认值
+    ----|----|----|----|----
+    mask | 是否显示蒙版 | boolean | — | false
+
+7. popover 组件新增 didShow 回调、didHide 回调
+   Popover Slot Methods
+   传入popover 的 slot 组件，如果实现了 didShow、didHide 方法
+   在popover show 和 hide 时会触发
 
 #### 优化类修改：
 1. DatePicker清除按钮mouseenter位置改变

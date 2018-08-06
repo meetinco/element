@@ -76,11 +76,32 @@ export default {
   computed: {
     tooltipId() {
       return `el-popover-${generateId()}`;
+    },
+    contentComponent() {
+      /**
+       * $slots.default 是一个数组
+       *  如果传入的是一个组件，默认第一个 vnode 是一个空字符串
+       */
+      if (!this.$slots.default) {
+        return null;
+      }
+      const vnodes = this.$slots.default.filter(item => item.tag)
+      if (!vnodes.length) {
+        return null;
+      }
+      const component = vnodes[0];
+      return component.componentInstance;
     }
   },
   watch: {
     showPopper(val) {
-      val ? this.$emit('show') : this.$emit('hide');
+      if (val) {
+        this.$emit('show');
+        this.contentComponent && this.contentComponent.didShow && this.contentComponent.didShow();
+      } else {
+        this.$emit('hide');
+        this.contentComponent && this.contentComponent.didHide && this.contentComponent.didHide();
+      }
       this.maskDom && (this.maskDom.style.zIndex = PopupManager.nextZIndex());
     }
   },

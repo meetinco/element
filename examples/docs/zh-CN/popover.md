@@ -228,12 +228,19 @@ Popover 的属性与 Tooltip 很类似，它们都是基于`Vue-popper`开发的
 |  popper-options        | [popper.js](https://popper.js.org/documentation.html) 的参数 | Object            | 参考 [popper.js](https://popper.js.org/documentation.html) 文档 | `{ boundariesElement: 'body', gpuAcceleration: false }` |
 | popper-class | 为 popper 添加类名 | String | — | — |
 | open-delay | 触发方式为 hover 时的显示延迟，单位为毫秒 | Number | — | — |
+| mask | 是否显示蒙版 | boolean | — | false|
 
 ### Slot
 | 参数 | 说明 |
 |--- | ---|
 | — | Popover 内嵌 HTML 文本 |
 | reference | 触发 Popover 显示的 HTML 元素 |
+
+### Slot Methods
+| 方法 | 说明 |
+|--- | ---|
+| didShow | Popover show 事件 会触发 default slot 的此方法 |
+| didHide | Popover hide 事件 会触发 default slot 的此方法 |
 
 ### Events
 | 事件名称 | 说明 | 回调参数 |

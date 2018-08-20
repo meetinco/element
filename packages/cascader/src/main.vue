@@ -45,7 +45,10 @@
       </template>
     </el-input>
     <span class="el-cascader__label" v-show="inputValue === ''">
-      <template v-if="showAllLevels">
+      <template v-if="formatMethod">
+        {{formatMethod(currentValue, currentLabels)}}
+      </template>
+      <template v-else-if="showAllLevels">
         <template v-for="(label, index) in currentLabels">
           {{ label }}
           <span v-if="index < currentLabels.length - 1"> {{ separator }} </span>
@@ -155,6 +158,10 @@ export default {
     showAllLevels: {
       type: Boolean,
       default: true
+    },
+    formatMethod: {
+      type: Function,
+      default: null
     },
     debounce: {
       type: Number,

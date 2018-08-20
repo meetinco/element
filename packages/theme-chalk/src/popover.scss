@@ -47,6 +47,9 @@
     @include m(show) {
       display: block;
     }
+    @include m(closeable) {
+      pointer-events: none;
+    }
   }
 
   &:focus:active, &:focus {

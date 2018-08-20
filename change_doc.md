@@ -52,5 +52,12 @@
    传入popover 的 slot 组件，如果实现了 didShow、didHide 方法
    在popover show 和 hide 时会触发
 
+8. cascader 支持传入 formatMethod 属性，接受一个方法
+   用于自定义显示值
+
+9. popover 新增 closeOnMask 属性
+   设置了 mask 属性，并设置 closeOnMask 属性，点击蒙版触发关闭事件
+
 #### 优化类修改：
-1. DatePicker清除按钮mouseenter位置改变
+1. DatePicker 清除按钮 mouseenter 位置改变
+2. DatePicker 选择时间范围，返回的 max date 为一天结束前一秒的时间

@@ -19,7 +19,15 @@
       </div>
     </transition>
     <slot name="reference"></slot>
-    <div v-if="mask" class="el-popover__mask" :class="{'el-popover__mask--show': showPopper}" id="el-popover-mask"></div>
+    <div
+      v-if="mask"
+      class="el-popover__mask"
+      :class="{
+        'el-popover__mask--show': showPopper,
+        'el-popover__mask--closeable': closeOnMask
+      }"
+      id="el-popover-mask">
+    </div>
   </span>
 </template>
 <script>
@@ -70,6 +78,10 @@ export default {
     mask: {
       type: Boolean,
       default: false
+    },
+    closeOnMask: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -85,7 +97,7 @@ export default {
       if (!this.$slots.default) {
         return null;
       }
-      const vnodes = this.$slots.default.filter(item => item.tag)
+      const vnodes = this.$slots.default.filter(item => item.tag);
       if (!vnodes.length) {
         return null;
       }

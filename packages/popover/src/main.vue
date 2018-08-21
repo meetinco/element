@@ -80,6 +80,9 @@ export default {
   },
   watch: {
     showPopper(val) {
+      if (this.disabled) {
+        return;
+      }
       val ? this.$emit('show') : this.$emit('hide');
       this.maskDom && (this.maskDom.style.zIndex = PopupManager.nextZIndex());
     }
@@ -103,7 +106,7 @@ export default {
         on(reference, 'focusin', () => {
           this.handleFocus();
           const instance = reference.__vue__;
-          if (instance && instance.focus) {
+          if (instance && typeof instance.focus === 'function') {
             instance.focus();
           }
         });
@@ -123,24 +126,7 @@ export default {
       on(reference, 'mouseleave', this.handleMouseLeave);
       on(popper, 'mouseleave', this.handleMouseLeave);
     } else if (this.trigger === 'focus') {
-      let found = false;
-
-      if ([].slice.call(reference.children).length) {
-        const children = reference.childNodes;
-        const len = children.length;
-        for (let i = 0; i < len; i++) {
-          if (children[i].nodeName === 'INPUT' ||
-              children[i].nodeName === 'TEXTAREA') {
-            on(children[i], 'focusin', this.doShow);
-            on(children[i], 'focusout', this.doClose);
-            found = true;
-            break;
-          }
-        }
-      }
-      if (found) return;
-      if (reference.nodeName === 'INPUT' ||
-        reference.nodeName === 'TEXTAREA') {
+      if (reference.querySelector('input, textarea')) {
         on(reference, 'focusin', this.doShow);
         on(reference, 'focusout', this.doClose);
       } else {
@@ -226,6 +212,8 @@ export default {
     off(reference, 'mousedown', this.doShow);
     off(reference, 'focusin', this.doShow);
     off(reference, 'focusout', this.doClose);
+    off(reference, 'mousedown', this.doShow);
+    off(reference, 'mouseup', this.doClose);
     off(reference, 'mouseleave', this.handleMouseLeave);
     off(reference, 'mouseenter', this.handleMouseEnter);
     off(document, 'click', this.handleDocumentClick);

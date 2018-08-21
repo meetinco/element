@@ -19,7 +19,9 @@
       tabPosition: {
         type: String,
         default: 'top'
-      }
+      },
+      beforeLeave: Function,
+      stretch: Boolean
     },
 
     provide() {
@@ -68,13 +70,27 @@
         this.$emit('tab-add');
       },
       setCurrentName(value) {
-        this.currentName = value;
-        this.$emit('input', value);
+        const changeCurrentName = () => {
+          this.currentName = value;
+          this.$emit('input', value);
+        };
+        if (this.currentName !== value && this.beforeLeave) {
+          const before = this.beforeLeave(value, this.currentName);
+          if (before && before.then) {
+            before.then(() => {
+              changeCurrentName();
+
+              this.$refs.nav && this.$refs.nav.removeFocus();
+            });
+          } else if (before !== false) {
+            changeCurrentName();
+          }
+        } else {
+          changeCurrentName();
+        }
       },
       addPanes(item) {
-        const index = this.$slots.default.filter(item => {
-          return item.elm.nodeType === 1 && /\bel-tab-pane\b/.test(item.elm.className);
-        }).indexOf(item.$vnode);
+        const index = this.$slots.default.indexOf(item.$vnode);
         this.panes.splice(index, 0, item);
       },
       removePanes(item) {
@@ -95,8 +111,9 @@
         panes,
         editable,
         addable,
-        activeBarWidth,
-        tabPosition
+        tabPosition,
+        stretch,
+        activeBarWidth
       } = this;
 
       const newButton = editable || addable
@@ -120,6 +137,7 @@
           editable,
           type,
           panes,
+          stretch,
           activeBarWidth
         },
         ref: 'nav'

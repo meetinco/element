@@ -40,12 +40,11 @@ const forced = {
         value={ this.isAllSelected } />;
     },
     renderCell: function(h, { row, column, store, $index }) {
-      return <div class="auto-show-box-cell"><el-checkbox
-        class="auto-display-checkbox"
+      return <el-checkbox
         nativeOn-click={ (event) => event.stopPropagation() }
         value={ store.isSelected(row) }
         disabled={ column.selectable ? !column.selectable.call(null, row, $index) : false }
-        on-input={ () => { store.commit('rowSelectedChanged', row); } } /><div class="checkbox-label"><span>{$index + 1}</span></div></div>;
+        on-input={ () => { store.commit('rowSelectedChanged', row); } } />;
     },
     sortable: false,
     resizable: false
@@ -114,8 +113,7 @@ const DEFAULT_RENDER_CELL = function(h, { row, column, $index }) {
   if (column && column.formatter) {
     return column.formatter(row, column, value, $index);
   }
-
-  return value || column.emptyText || '';
+  return value;
 };
 
 const parseWidth = (width) => {
@@ -182,8 +180,17 @@ export default {
       type: Boolean,
       default: true
     },
-    emptyText: String,
-    index: [Number, Function]
+	emptyText: String,
+    index: [Number, Function],
+    sortOrders: {
+      type: Array,
+      default() {
+        return ['ascending', 'descending', null];
+      },
+      validator(val) {
+        return val.every(order => ['ascending', 'descending', null].indexOf(order) > -1);
+      }
+    }
   },
 
   data() {
@@ -264,16 +271,27 @@ export default {
       fixed: this.fixed === '' ? true : this.fixed,
       filterMethod: this.filterMethod,
       filters: this.filters,
-      filterable: this.filters || this.filterMethod,
+      filterable: (this.filters && this.filters.length) || this.filterMethod,
       filterMultiple: this.filterMultiple,
       filterOpened: false,
       filteredValue: this.filteredValue || [],
       filterPlacement: this.filterPlacement || '',
-      emptyText: this.emptyText,
-      index: this.index
+	  emptyText: this.emptyText,
+      index: this.index,
+      sortOrders: this.sortOrders
     });
 
-    objectAssign(column, forced[type] || {});
+    let source = forced[type] || {};
+    for (let prop in source) {
+      if (source.hasOwnProperty(prop)) {
+        let value = source[prop];
+        if (value !== undefined) {
+          column[prop] = prop === 'className'
+            ? `${column[prop]} ${value}`
+            : value;
+        }
+      }
+    }
 
     this.columnConfig = column;
 
@@ -398,6 +416,18 @@ export default {
     formatter(newVal) {
       if (this.columnConfig) {
         this.columnConfig.formatter = newVal;
+      }
+    },
+
+    className(newVal) {
+      if (this.columnConfig) {
+        this.columnConfig.className = newVal;
+      }
+    },
+
+    labelClassName(newVal) {
+      if (this.columnConfig) {
+        this.columnConfig.labelClassName = newVal;
       }
     }
   },

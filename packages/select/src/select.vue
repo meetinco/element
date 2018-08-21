@@ -49,6 +49,7 @@
         :disabled="selectDisabled"
         :autocomplete="autoComplete"
         @focus="handleFocus"
+        @blur="softFocus = false"
         @click.stop
         @keyup="managePlaceholder"
         @keydown="resetInputState"
@@ -61,8 +62,7 @@
         @compositionupdate="handleComposition"
         @compositionend="handleComposition"
         v-model="query"
-        @input="e => handleQueryChange(e.target.value)"
-        :debounce="remote ? 300 : 0"
+        @input="debouncedQueryChange"
         v-if="filterable"
         :style="{ width: inputLength + 'px', 'max-width': inputWidth - 42 + 'px' }"
         ref="input">
@@ -77,7 +77,7 @@
       :auto-complete="autoComplete"
       :size="selectSize"
       :disabled="selectDisabled"
-      :readonly="!filterable || multiple || !visible"
+      :readonly="readonly"
       :validate-event="false"
       :class="{ 'is-focus': visible }"
       @focus="handleFocus"
@@ -91,8 +91,12 @@
       @paste.native="debouncedOnInputChange"
       @mouseenter.native="inputHovering = true"
       @mouseleave.native="inputHovering = false">
-      <i slot="suffix" v-if="loading" class="el-input__icon el-icon-loading"></i>
-      <i slot="suffix" v-else
+      <template slot="prefix" v-if="$slots.prefix">
+        <slot name="prefix"></slot>
+      </template>
+	  <i slot="suffix" v-if="loading" class="el-input__icon el-icon-loading"></i>
+      <i slot="suffix"
+	   v-else
        :class="['el-select__caret', 'el-input__icon', 'el-icon-' + iconClass]"
        @click="handleIconClick"
       ></i>
@@ -148,6 +152,7 @@
   import { getValueByPath } from 'element-ui/src/utils/util';
   import { valueEquals } from 'element-ui/src/utils/util';
   import NavigationMixin from './navigation-mixin';
+  import { isKorean } from 'element-ui/src/utils/shared';
 
   const sizeMap = {
     'medium': 36,
@@ -182,6 +187,13 @@
       _elFormItemSize() {
         return (this.elFormItem || {}).elFormItemSize;
       },
+
+      readonly() {
+        // trade-off for IE input readonly problem: https://github.com/ElemeFE/element/issues/10403
+        const isIE = !this.$isServer && !isNaN(Number(document.documentMode));
+        return !this.filterable || this.multiple || !isIE && !this.visible;
+      },
+
       iconClass() {
         if (this.loading) {
           return '';
@@ -191,6 +203,7 @@
           this.inputHovering &&
           !this.multiple &&
           this.value !== undefined &&
+          this.value !== null &&
           this.value !== '';
         return criteria ? 'circle-close is-show-close' : (this.remote && this.filterable ? '' : 'arrow-up');
       },
@@ -255,6 +268,7 @@
         type: String,
         default: 'off'
       },
+      automaticDropdown: Boolean,
       size: String,
       disabled: Boolean,
       clearable: Boolean,
@@ -312,7 +326,9 @@
         previousQuery: null,
         inputHovering: false,
         currentPlaceholder: '',
-        isOnComposition: false
+        menuVisibleOnFocus: false,
+        isOnComposition: false,
+        isSilentBlur: false
       };
     },
 
@@ -327,7 +343,7 @@
         this.cachedPlaceHolder = this.currentPlaceholder = val;
       },
 
-      value(val) {
+      value(val, oldVal) {
         if (this.multiple) {
           this.resetInputHeight();
           if (val.length > 0 || (this.$refs.input && this.query !== '')) {
@@ -343,6 +359,9 @@
         this.setSelected();
         if (this.filterable && !this.multiple) {
           this.inputLength = 20;
+        }
+        if (!valueEquals(val, oldVal)) {
+          this.dispatch('ElFormItem', 'el.form.change', val);
         }
       },
 
@@ -419,11 +438,13 @@
 
     methods: {
       handleComposition(event) {
+        const text = event.target.value;
         if (event.type === 'compositionend') {
           this.isOnComposition = false;
-          this.handleQueryChange(event.target.value);
+          this.handleQueryChange(text);
         } else {
-          this.isOnComposition = true;
+          const lastCharacter = text[text.length - 1] || '';
+          this.isOnComposition = !isKorean(lastCharacter);
         }
       },
       handleQueryChange(val) {
@@ -492,13 +513,14 @@
       emitChange(val) {
         if (!valueEquals(this.value, val)) {
           this.$emit('change', val);
-          this.dispatch('ElFormItem', 'el.form.change', val);
         }
       },
 
       getOption(value) {
         let option;
         const isObject = Object.prototype.toString.call(value).toLowerCase() === '[object object]';
+        const isNull = Object.prototype.toString.call(value).toLowerCase() === '[object null]';
+
         for (let i = this.cachedOptions.length - 1; i >= 0; i--) {
           const cachedOption = this.cachedOptions[i];
           const isEqual = isObject
@@ -510,7 +532,7 @@
           }
         }
         if (option) return option;
-        const label = !isObject
+        const label = (!isObject && !isNull)
           ? value : '';
         let newOption = {
           value: value,
@@ -550,6 +572,10 @@
 
       handleFocus(event) {
         if (!this.softFocus) {
+          if (this.automaticDropdown || this.filterable) {
+            this.visible = true;
+            this.menuVisibleOnFocus = true;
+          }
           this.$emit('focus', event);
         } else {
           this.softFocus = false;
@@ -562,7 +588,14 @@
       },
 
       handleBlur(event) {
-        this.$emit('blur', event);
+        setTimeout(() => {
+          if (this.isSilentBlur) {
+            this.isSilentBlur = false;
+          } else {
+            this.$emit('blur', event);
+          }
+        }, 50);
+        this.softFocus = false;
       },
 
       handleIconClick(event) {
@@ -648,7 +681,7 @@
         }, 300);
       },
 
-      handleOptionSelect(option) {
+      handleOptionSelect(option, byClick) {
         if (this.multiple) {
           const value = this.value.slice();
           const optionIndex = this.getValueIndex(value, option.value);
@@ -670,16 +703,20 @@
           this.emitChange(option.value);
           this.visible = false;
         }
+        this.isSilentBlur = byClick;
+        this.setSoftFocus();
+        if (this.visible) return;
         this.$nextTick(() => {
-          if (this.visible) return;
           this.scrollToOption(option);
-          this.setSoftFocus();
         });
       },
 
       setSoftFocus() {
         this.softFocus = true;
-        (this.$refs.input || this.$refs.reference).focus();
+        const input = this.$refs.input || this.$refs.reference;
+        if (input) {
+          input.focus();
+        }
       },
 
       getValueIndex(arr = [], value) {
@@ -702,7 +739,11 @@
 
       toggleMenu() {
         if (!this.selectDisabled) {
-          this.visible = !this.visible;
+          if (this.menuVisibleOnFocus) {
+            this.menuVisibleOnFocus = false;
+          } else {
+            this.visible = !this.visible;
+          }
           if (this.visible) {
             (this.$refs.input || this.$refs.reference).focus();
           }
@@ -815,11 +856,12 @@
         this.onInputChange();
       });
 
+      this.debouncedQueryChange = debounce(this.debounce, (e) => {
+        this.handleQueryChange(e.target.value);
+      });
+
       this.$on('handleOptionClick', this.handleOptionSelect);
       this.$on('setSelected', this.setSelected);
-      this.$on('fieldReset', () => {
-        this.dispatch('ElFormItem', 'el.form.change');
-      });
     },
 
     mounted() {

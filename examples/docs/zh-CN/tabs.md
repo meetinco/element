@@ -375,6 +375,8 @@
 | value  | 绑定值，选中选项卡的 name  | string   |  —  |  第一个选项卡的 name |
 | active-bar-width  | 激活条的宽度  |  number   |  —  |  — |
 | tab-position  | 选项卡所在位置 | string   |  top/right/bottom/left  |  top |
+| stretch  | 标签的宽度是否自撑开 | boolean   |  -  |  false |
+| before-leave | 切换标签之前的钩子，若返回 false 或者返回 Promise 且被 reject，则阻止切换。 | Function(activeName, oldActiveName) | — | — |
 
 ### Tabs Events
 | 事件名称 | 说明 | 回调参数 |
@@ -391,4 +393,4 @@
 | disabled | 是否禁用 | boolean | — | false |
 | name      | 与选项卡 activeName 对应的标识符，表示选项卡别名 | string | — | 该选项卡在选项卡列表中的顺序值，如第一个选项卡则为'1' |
 | closable  | 标签是否可关闭   | boolean   | — |  false  |
-| has-notice  | 是否显示提示   | boolean   | — |  false  |
+| lazy  | 标签是否延迟渲染   | boolean   | — |  false  |

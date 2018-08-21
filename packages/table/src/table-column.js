@@ -1,7 +1,7 @@
 import ElCheckbox from 'element-ui/packages/checkbox';
 import ElTag from 'element-ui/packages/tag';
 import objectAssign from 'element-ui/src/utils/merge';
-import { getPropByPath } from 'element-ui/src/utils/util';
+import {getPropByPath} from 'element-ui/src/utils/util';
 
 let columnIdSeed = 1;
 
@@ -32,28 +32,36 @@ const defaults = {
 
 const forced = {
   selection: {
-    renderHeader: function(h, { store }) {
-      return <el-checkbox
-        disabled={ store.states.data && store.states.data.length === 0 }
-        indeterminate={ store.states.selection.length > 0 && !this.isAllSelected }
-        nativeOn-click={ this.toggleAllSelection }
-        value={ this.isAllSelected } />;
+    renderHeader: function(h, {store}) {
+      return (
+        <el-checkbox
+          disabled={store.states.data && store.states.data.length === 0}
+          indeterminate={store.states.selection.length > 0 && !this.isAllSelected}
+          nativeOn-click={this.toggleAllSelection}
+          value={this.isAllSelected}
+        />
+      );
     },
-    renderCell: function(h, { row, column, store, $index }) {
-      return <el-checkbox
-        nativeOn-click={ (event) => event.stopPropagation() }
-        value={ store.isSelected(row) }
-        disabled={ column.selectable ? !column.selectable.call(null, row, $index) : false }
-        on-input={ () => { store.commit('rowSelectedChanged', row); } } />;
+    renderCell: function(h, {row, column, store, $index}) {
+      return (
+        <el-checkbox
+          nativeOn-click={event => event.stopPropagation()}
+          value={store.isSelected(row)}
+          disabled={column.selectable ? !column.selectable.call(null, row, $index) : false}
+          on-input={() => {
+            store.commit('rowSelectedChanged', row);
+          }}
+        />
+      );
     },
     sortable: false,
     resizable: false
   },
   index: {
-    renderHeader: function(h, { column }) {
+    renderHeader: function(h, {column}) {
       return column.label || '#';
     },
-    renderCell: function(h, { $index, column }) {
+    renderCell: function(h, {$index, column}) {
       let i = $index + 1;
       const index = column.index;
 
@@ -63,20 +71,24 @@ const forced = {
         i = index($index);
       }
 
-      return <div>{ i }</div>;
+      return <div>{i}</div>;
     },
     sortable: false
   },
   expand: {
-    renderHeader: function(h, { column }) {
+    renderHeader: function(h, {column}) {
       return column.label || '';
     },
-    renderCell: function(h, { row, store }, proxy) {
+    renderCell: function(h, {row, store}, proxy) {
       const expanded = store.states.expandRows.indexOf(row) > -1;
-      return <div class={ 'el-table__expand-icon ' + (expanded ? 'el-table__expand-icon--expanded' : '') }
-        on-click={ e => proxy.handleExpandClick(row, e) }>
-        <i class='el-icon el-icon-arrow-right'></i>
-      </div>;
+      return (
+        <div
+          class={'el-table__expand-icon ' + (expanded ? 'el-table__expand-icon--expanded' : '')}
+          on-click={e => proxy.handleExpandClick(row, e)}
+        >
+          <i class="el-icon el-icon-arrow-right" />
+        </div>
+      );
     },
     sortable: false,
     resizable: false,
@@ -107,7 +119,7 @@ const getDefaultColumn = function(type, options) {
   return column;
 };
 
-const DEFAULT_RENDER_CELL = function(h, { row, column, $index }) {
+const DEFAULT_RENDER_CELL = function(h, {row, column, $index}) {
   const property = column.property;
   const value = property && getPropByPath(row, property).v;
   if (column && column.formatter) {
@@ -116,7 +128,7 @@ const DEFAULT_RENDER_CELL = function(h, { row, column, $index }) {
   return value;
 };
 
-const parseWidth = (width) => {
+const parseWidth = width => {
   if (width !== undefined) {
     width = parseInt(width, 10);
     if (isNaN(width)) {
@@ -126,7 +138,7 @@ const parseWidth = (width) => {
   return width;
 };
 
-const parseMinWidth = (minWidth) => {
+const parseMinWidth = minWidth => {
   if (minWidth !== undefined) {
     minWidth = parseInt(minWidth, 10);
     if (isNaN(minWidth)) {
@@ -180,7 +192,7 @@ export default {
       type: Boolean,
       default: true
     },
-	emptyText: String,
+    emptyText: String,
     index: [Number, Function],
     sortOrders: {
       type: Array,
@@ -259,7 +271,7 @@ export default {
       isColumnGroup,
       context: this.context,
       align: this.align ? 'is-' + this.align : null,
-      headerAlign: this.headerAlign ? 'is-' + this.headerAlign : (this.align ? 'is-' + this.align : null),
+      headerAlign: this.headerAlign ? 'is-' + this.headerAlign : this.align ? 'is-' + this.align : null,
       sortable: this.sortable === '' ? true : this.sortable,
       sortMethod: this.sortMethod,
       sortBy: this.sortBy,
@@ -276,7 +288,7 @@ export default {
       filterOpened: false,
       filteredValue: this.filteredValue || [],
       filterPlacement: this.filterPlacement || '',
-	  emptyText: this.emptyText,
+      emptyText: this.emptyText,
       index: this.index,
       sortOrders: this.sortOrders
     });
@@ -286,9 +298,7 @@ export default {
       if (source.hasOwnProperty(prop)) {
         let value = source[prop];
         if (value !== undefined) {
-          column[prop] = prop === 'className'
-            ? `${column[prop]} ${value}`
-            : value;
+          column[prop] = prop === 'className' ? `${column[prop]} ${value}` : value;
         }
       }
     }
@@ -300,13 +310,11 @@ export default {
 
     if (type === 'expand') {
       owner.renderExpanded = function(h, data) {
-        return _self.$scopedSlots.default
-          ? _self.$scopedSlots.default(data)
-          : _self.$slots.default;
+        return _self.$scopedSlots.default ? _self.$scopedSlots.default(data) : _self.$slots.default;
       };
 
       column.renderCell = function(h, data) {
-        return <div class="cell">{ renderCell(h, data, this._renderProxy) }</div>;
+        return <div class="cell">{renderCell(h, data, this._renderProxy)}</div>;
       };
 
       return;
@@ -321,9 +329,13 @@ export default {
         renderCell = DEFAULT_RENDER_CELL;
       }
 
-      return _self.showOverflowTooltip || _self.showTooltipWhenOverflow
-        ? <div class="cell el-tooltip" style={ {width: (data.column.realWidth || data.column.width) - 1 + 'px'} }>{ renderCell(h, data) }</div>
-        : <div class="cell">{ renderCell(h, data) }</div>;
+      return _self.showOverflowTooltip || _self.showTooltipWhenOverflow ? (
+        <div class="cell el-tooltip" style={{width: (data.column.realWidth || data.column.width) - 1 + 'px'}}>
+          {renderCell(h, data)}
+        </div>
+      ) : (
+        <div class="cell">{renderCell(h, data)}</div>
+      );
     };
   },
 

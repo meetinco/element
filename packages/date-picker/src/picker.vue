@@ -533,10 +533,6 @@ export default {
       return this.size || this._elFormItemSize || (this.$ELEMENT || {}).size;
     },
 
-    pickerWidth() {
-      
-    },
-
     pickerDisabled() {
       return this.disabled || (this.elForm || {}).disabled;
     },

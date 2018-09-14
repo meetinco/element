@@ -29,6 +29,7 @@
         default: noop
       },
       type: String,
+      stretch: Boolean,
       activeBarWidth: Number
     },
 
@@ -188,6 +189,7 @@
         type,
         panes,
         editable,
+        stretch,
         onTabClick,
         onTabRemove,
         navStyle,
@@ -249,7 +251,13 @@
         <div class={['el-tabs__nav-wrap', scrollable ? 'is-scrollable' : '', `is-${ this.rootTabs.tabPosition }`]}>
           {scrollBtn}
           <div class={['el-tabs__nav-scroll']} ref="navScroll">
-            <div class="el-tabs__nav" ref="nav" style={navStyle} role="tablist" on-keydown={ changeTab }>
+            <div
+              class={['el-tabs__nav', `is-${ this.rootTabs.tabPosition }`, stretch && ['top', 'bottom'].indexOf(this.rootTabs.tabPosition) !== -1 ? 'is-stretch' : '']}
+              ref="nav"
+              style={navStyle}
+              role="tablist"
+              on-keydown={ changeTab }
+            >
               {!type ? <tab-bar tabs={panes} active-width={activeBarWidth}></tab-bar> : null}
               {tabs}
             </div>
@@ -273,4 +281,3 @@
     }
   };
 </script>
-

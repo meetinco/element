@@ -1,24 +1,47 @@
 ## Changelog
 
+### 2.4.7
+
+*2018-09-14*
+
+- Fixed DatePicker not triggering form validation, #12328 #12348 
+- Fixed DatePicker throwing errors in multiple mode, #12347 
+- Fixed incorrect position of DatePicker spinner, #12415 (by @rang-ali)
+- Fixed automatic filling of DatePicker input box, #12521 (by @abdallanayer)
+- Fixed Input not highlighted in Cascader, #12341
+- Fixed wrong order of Tabpane, #12346 
+- Fixed incorrect position of ColorPicker cursor, #12376 (by @cnwhy)
+- Fixed the style of Submenu, #2457
+- Fixed not highlighted after Submenu is selected, #12479
+- Fixed incorrect values selected by Cascader, #12508 (by @huangjinqiang)
+- Fixed incorrect value of Pagination input box, #12525 
+- Fixed order that Pagination triggers events, #12530
+- Fixed Table Filter not displayed, #12539
+- Fixed Tree unable to delete nodes, #12684
+- Fixed height of Select Input changing in single mode, #12719
+- Fixed style of FormItem label in nested Form, #12748
+- Added `autocomplete` attribute for Input, deprecated `auto-complete`, #12514 (by @axetroy)
+- Added slots-scope for Form to display validation information, #12715 (by @YamenSharaf)
+
 ### 2.4.6
 
 *2018-08-09*
 
-- Fixed Table not showing filter icon when `filters` is assigned empty array, #12165
-- Fixed Menu not saving active state when `collapse` is changed, #12178 (by @elfman)
-- Fixed Cascader not escaping special characters for Regexp, #12248
-- Fixed disabled RadioButton showing box-shadow when clicked, #12262
-- Fixed arrow key not effect when default value is `undefined`,#12322
-- Fixed query function of Select not debounced in multi mode, #12181
-- Fixed query keyword of Select disappearing in multi mode, #12304
-- Fixed incorrect width of Dialog when it is displayed in full screen, #12203
-- Fixed incorrect display of Main on IE, #12237
-- Fixed Input triggering two form validations, #12260
-- Fixed adding new Tree node causing nodes to disappear, #12256
-- Fixed Tree node not deleted after dragging, #12279
-- Fixed Popover not visible when InputNumber focuses, #12284
-- Added `popper-append-to-body` attribute for Autocomplete, #12241
-- Added `sync` modifier support for Pagination's `page-size` attribute, #12281
+- Arreglada la tabla que no mostraba el ícono del filtro cuando a  `filter` se les asignaba un array vacío, #12165
+- Arreglado Menu que no guardaba el estado activo cuando cambiaba `collapse` #12178 (por @elfman)
+- Se ha corregido que Cascader no escapaba a los caracteres especiales para Regexp, #12248
+- Se ha corregido que el RadioBotón deshabilitado mostraba la sombra de la caja cuando se hacía clic, #12262
+- Arreglado el efecto de la tecla de flecha en Select cuando el valor por defecto es `undefined`,#12322
+- Corregida la función de consulta de Select not debounced en modo multi, #12181
+- Corregida que la palabra clave de consulta de Select desaparecía en modo multi, #12304
+- Corregido el ancho incorrecto de Dialog cuando se muestra a pantalla completa, #12203
+- Corregida la visualización incorrecta de Main en IE, #12237
+- Corregido el trigger de Input con dos validaciones de Form, #12260
+- Arreglado el añadir un nuevo nodo de árbol que causaba que los nodos desaparecieran, #12256
+- Arreglado el nodo Tree no se borraba después de arrastrar, #12279
+- Popover corregido porque no era visible cuando InputNumber no enfocaba, #12284
+- Añadido el atributo `popper-append-to-body` para Autocompletar, #12241
+- Añadido el modificador `sync` para el atributo `page-size` de Pagination, #12281
 
 ### 2.4.5
 

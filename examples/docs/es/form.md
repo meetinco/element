@@ -539,10 +539,10 @@ Este ejemplo muestra cómo personalizar sus propias reglas de validación para f
 ```html
 <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="120px" class="demo-ruleForm">
   <el-form-item label="Password" prop="pass">
-    <el-input type="password" v-model="ruleForm2.pass" auto-complete="off"></el-input>
+    <el-input type="password" v-model="ruleForm2.pass" autocomplete="off"></el-input>
   </el-form-item>
   <el-form-item label="Confirm" prop="checkPass">
-    <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
+    <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off"></el-input>
   </el-form-item>
   <el-form-item label="Age" prop="age">
     <el-input v-model.number="ruleForm2.age"></el-input>
@@ -721,7 +721,7 @@ Este ejemplo muestra cómo personalizar sus propias reglas de validación para f
       { type: 'number', message: 'age must be a number'}
     ]"
   >
-    <el-input type="age" v-model.number="numberValidateForm.age" auto-complete="off"></el-input>
+    <el-input type="age" v-model.number="numberValidateForm.age" autocomplete="off"></el-input>
   </el-form-item>
   <el-form-item>
     <el-button type="primary" @click="submitForm('numberValidateForm')">Submit</el-button>
@@ -840,7 +840,7 @@ Todos los componentes de un formulario heredan su atributo `size`. De manera sim
 | model                   | Datos del componente                     | object  | —                     | —           |
 | rules                   | Reglas de validación                     | object  | —                     | —           |
 | inline                  | Si el form es inline                     | boolean | —                     | false       |
-| label-position          | Posicion de la etiqueta                  | string  | left / right / top    | right       |
+| label-position          | Posicion de la etiqueta. Si esta 'left' o 'right', también se necesita el prop `label-width`                  | string  | left / right / top    | right       |
 | label-width             | ancho de la etiqueta, y todos los form items directos descendientes heredarán este valor | string  | —                     | —           |
 | label-suffix            | sufijo de la etiqueta                    | string  | —                     | —           |
 | show-message            | si mostrar o no el mensaje de error      | boolean | —                     | true        |
@@ -883,6 +883,11 @@ Todos los componentes de un formulario heredan su atributo `size`. De manera sim
 | ------ | ------------------------ |
 | —      | contenido del Form Item  |
 | label  | contenido de la etiqueta |
+
+### Form-Item Scoped Slot
+|      Name     | Description |
+|---------------|-------------|
+|      error    | Custom content to display validation message. The scope parameter is { error } |
 
 ### Form-Item Metodo
 

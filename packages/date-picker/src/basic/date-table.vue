@@ -453,8 +453,8 @@
               this.handleMouseMove(event);
             });
           } else if (this.minDate && !this.maxDate) {
+            const dayMS = 86400000 - 1; // 一天的毫秒数
             if (newDate >= this.minDate) {
-              const dayMS = 86400000 - 1; // 一天的毫秒数
               const maxDate = new Date(newDate.getTime() + dayMS); // date range 的 maxDate 取 一天结束前一秒的事时间
               this.rangeState.selecting = false;
 
@@ -465,8 +465,8 @@
             } else {
               const minDate = new Date(newDate.getTime());
               this.rangeState.selecting = false;
-
-              this.$emit('pick', { minDate, maxDate: this.minDate });
+              const maxDate = new Date(this.minDate.getTime() + dayMS); // date range 的 maxDate 取 一天结束前一秒的事时间
+              this.$emit('pick', { minDate, maxDate });
             }
           } else if (!this.minDate) {
             const minDate = new Date(newDate.getTime());

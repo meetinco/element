@@ -528,7 +528,7 @@ export default {
 
       // NOTE: deal with common but incorrect usage, should remove in next major version
       // user might provide string / timestamp without value-format, coerce them into date (or array of date)
-      return Array.isArray(this.value) ? this.value.map(val => new Date(val)) : new Date(this.value);
+      return Array.isArray(this.value) ? this.value.map(val => val ? new Date(val) : val) : new Date(this.value);
     },
 
     _elFormItemSize() {

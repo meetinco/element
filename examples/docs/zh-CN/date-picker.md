@@ -59,7 +59,7 @@
         value3: '',
         value4: '',
         value5: '',
-        value6: '',
+        value6: [null, null],
         value7: '',
         value8: '',
         value9: '',

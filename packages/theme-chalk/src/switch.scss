@@ -82,6 +82,25 @@
     }
   }
 
+  @include e(loading) {
+    position: absolute;
+    transition: all .3s;
+    z-index: 1;
+    width: 16px;
+    height: 16px;
+    left: 1px;
+    top: 1px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include m(right) {
+      left: 100%;
+      margin-left: -17px;
+    }
+  }
+
   @include when(checked) {
     .el-switch__core {
       border-color: $--switch-on-color;

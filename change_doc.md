@@ -58,6 +58,12 @@
 9. popover 新增 closeOnMask 属性
    设置了 mask 属性，并设置 closeOnMask 属性，点击蒙版触发关闭事件
 
+10. switch 新增 loading 态
+    Popover Attributes
+    参数 | 说明 | 类型 | 可选值 | 默认值
+    ----|----|----|----|----
+    loading | 是否显示加载态 | boolean | — | false
+
 #### 优化类修改：
 1. DatePicker 清除按钮 mouseenter 位置改变
 2. DatePicker 选择时间范围，返回的 max date 为一天结束前一秒的时间

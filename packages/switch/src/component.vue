@@ -26,6 +26,9 @@
       <span v-if="!inactiveIconClass && inactiveText" :aria-hidden="checked">{{ inactiveText }}</span>
     </span>
     <span class="el-switch__core" ref="core" :style="{ 'width': coreWidth + 'px' }">
+      <span v-if="loading" :class="['el-switch__loading', checked ? 'el-switch__loading--right' : '']">
+        <i class="el-icon-loading"></i>
+      </span>
     </span>
     <span
       :class="['el-switch__label', 'el-switch__label--right', checked ? 'is-active' : '']"
@@ -90,7 +93,11 @@
         type: String,
         default: ''
       },
-      id: String
+      id: String,
+      loading: {
+        type: Boolean,
+        default: false
+      }
     },
     data() {
       return {
@@ -107,7 +114,7 @@
         return this.value === this.activeValue;
       },
       switchDisabled() {
-        return this.disabled || (this.elForm || {}).disabled;
+        return this.disabled || (this.elForm || {}).disabled || this.loading;
       }
     },
     watch: {

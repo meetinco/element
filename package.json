@@ -1,6 +1,6 @@
 {
   "name": "meetin-sass-ui",
-  "version": "2.4.6-beta.5",
+  "version": "2.4.6-beta.6",
   "description": "A Component Library for Vue.js.",
   "main": "lib/element-ui.common.js",
   "files": [

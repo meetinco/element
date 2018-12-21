@@ -103,6 +103,9 @@ export default {
       }
       const component = vnodes[0];
       return component.componentInstance;
+    },
+    isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent);
     }
   },
   watch: {
@@ -152,7 +155,11 @@ export default {
     }
     if (this.trigger === 'click') {
       on(reference, 'click', this.doToggle);
-      on(document, 'click', this.handleDocumentClick);
+      if (this.isMobile) {
+        on(document, 'touchend', this.handleDocumentClick);
+      } else {
+        on(document, 'click', this.handleDocumentClick);
+      }
     } else if (this.trigger === 'hover') {
       on(reference, 'mouseenter', this.handleMouseEnter);
       on(popper, 'mouseenter', this.handleMouseEnter);

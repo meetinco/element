@@ -44,7 +44,8 @@ export default {
 
   data() {
     return {
-      maskDom: null
+      maskDom: null,
+      touchMoved: false
     };
   },
 
@@ -157,6 +158,9 @@ export default {
       on(reference, 'click', this.doToggle);
       if (this.isMobile) {
         on(document, 'touchend', this.handleDocumentClick);
+        on(document, 'touchmove', () => {
+          this.touchMoved = true;
+        });
       } else {
         on(document, 'click', this.handleDocumentClick);
       }
@@ -226,6 +230,10 @@ export default {
 
       if (!reference && this.$slots.reference && this.$slots.reference[0]) {
         reference = this.referenceElm = this.$slots.reference[0].elm;
+      }
+      if (this.touchMoved) {
+        this.touchMoved = false;
+        return;
       }
       if (!this.$el ||
         !reference ||

@@ -1760,7 +1760,6 @@ describe('DatePicker', () => {
             picker.$el.querySelector('td.available ~ td.available').click();
             setTimeout(_ => {
               expect(spy.calledOnce).to.equal(true);
-              console.log('first assert passed');
               // change event is not emitted if used does not change value
               // datarange also requires proper array equality check
               input.blur();
@@ -1773,7 +1772,6 @@ describe('DatePicker', () => {
                   endCell.click();
                   setTimeout(_ => {
                     expect(spy.calledOnce).to.equal(true);
-                    console.log('second assert passed');
                     done();
                   }, DELAY);
                 }, DELAY);
@@ -2161,16 +2159,16 @@ describe('DatePicker', () => {
         triggerEvent(rightCell, 'click', true);
 
         setTimeout(_ => {
-          triggerEvent(input2, 'input');
           input2.value = '1988-6-4';
+          triggerEvent(input2, 'input');
           triggerEvent(input2, 'change');
 
           setTimeout(_ => {
-            triggerEvent(input, 'input');
             input.value = '1989-6-4';
+            triggerEvent(input, 'input');
             triggerEvent(input, 'change', true);
             setTimeout(_ => {
-              expect(vm.picker.maxDate > vm.picker.minDate).to.true;
+              expect(vm.picker.maxDate >= vm.picker.minDate).to.true;
               done();
             }, DELAY);
           }, DELAY);
@@ -2191,6 +2189,43 @@ describe('DatePicker', () => {
         setTimeout(_ => {
           expect(input.value).to.exist;
           done();
+        }, DELAY);
+      }, DELAY);
+    });
+
+    it('confirm honors disabledDate', done => {
+      vm = createVue({
+        template: '<el-date-picker type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" v-model="value" :picker-options="pickerOptions" ref="compo" />',
+        data() {
+          return {
+            pickerOptions: {
+              disabledDate(date) {
+                return date.getTime() < new Date(2000, 9, 1); // 2000-10-01
+              }
+            },
+            value: ['2000-10-02 00:00:00', '2000-10-03 00:00:00']
+          };
+        }
+      }, true);
+      const input = vm.$el.querySelector('input');
+
+      input.blur();
+      input.focus();
+      setTimeout(_ => {
+        // simulate user input of invalid date
+        vm.$refs.compo.picker.handleDateChange('2000-09-01', 'min');
+        setTimeout(_ => {
+          expect(vm.$refs.compo.picker.btnDisabled).to.equal(true); // invalid input disables button
+          vm.$refs.compo.picker.handleConfirm();
+          setTimeout(_ => {
+            expect(vm.$refs.compo.pickerVisible).to.equal(true); // can not confirm, picker remains open
+            // simulate click outside to close picker
+            vm.$refs.compo.handleClose();
+            setTimeout(_ => {
+              expect(vm.value).to.eql(['2000-10-02 00:00:00', '2000-10-03 00:00:00']);
+              done();
+            }, DELAY);
+          }, DELAY);
         }, DELAY);
       }, DELAY);
     });
@@ -2252,6 +2287,51 @@ describe('DatePicker', () => {
         done();
       }, DELAY);
     }, DELAY);
+  });
+
+  describe('picker-options:selectableRange', () => {
+    let vm;
+    afterEach(() => destroyVM(vm));
+    it('selectableRange', done => {
+      vm = createVue({
+        template: `
+        <el-date-picker v-model="value" type="datetime" :picker-options="pickerOptions" ref="compo"></el-date-picker>
+        `,
+        data() {
+          return {
+            value: new Date(2019, 0, 1, 18, 50),
+            pickerOptions: {
+              selectableRange: ['17:30:00 - 18:30:00', '18:50:00 - 20:30:00', '21:00:00 - 22:00:00']
+            }
+          };
+        }
+      }, true);
+      const input = vm.$el.querySelector('input');
+      input.blur();
+      input.focus();
+      setTimeout(() => {
+        const $el = vm.$refs.compo.picker.$el;
+        const input1 = $el.querySelectorAll('.el-date-picker__editor-wrap input')[1];
+        input1.blur();
+        input1.focus();
+        setTimeout(_ => {
+          const list = $el.querySelectorAll('.el-time-spinner__list');
+          const hoursEl = list[0];
+          const disabledHours = [].slice
+            .call(hoursEl.querySelectorAll('.disabled'))
+            .map(node => Number(node.textContent));
+          expect(disabledHours[disabledHours.length - 2]).to.equal(16);
+          expect(disabledHours[disabledHours.length - 1]).to.equal(23);
+          const minutesEl = list[1];
+          const disabledMinutes = [].slice
+            .call(minutesEl.querySelectorAll('.disabled'))
+            .map(node => Number(node.textContent));
+          expect(disabledMinutes.length).to.equal(19);
+          done();
+        }, DELAY);
+      }, DELAY);
+    });
+
   });
 
   describe('picker-options:disabledDate', () => {

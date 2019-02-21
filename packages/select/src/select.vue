@@ -8,7 +8,7 @@
       class="el-select__tags"
       v-if="multiple"
       ref="tags"
-      :style="{ 'max-width': inputWidth - 32 + 'px' }">
+      :style="{ 'max-width': inputWidth - 32 + 'px', width: '100%' }">
       <span v-if="collapseTags && selected.length">
         <el-tag
           :closable="!selectDisabled"
@@ -64,7 +64,7 @@
         v-model="query"
         @input="debouncedQueryChange"
         v-if="filterable"
-        :style="{ width: inputLength + 'px', 'max-width': inputWidth - 42 + 'px' }"
+        :style="{ 'flex-grow': '1', width: inputLength / (inputWidth - 32) + '%', 'max-width': inputWidth - 42 + 'px' }"
         ref="input">
     </div>
     <el-input
@@ -94,13 +94,15 @@
       <template slot="prefix" v-if="$slots.prefix">
         <slot name="prefix"></slot>
       </template>
-      <i slot="suffix" v-if="loading" class="el-input__icon el-icon-loading"></i>
-      <i slot="suffix" v-else
-       :class="['el-select__caret', 'el-input__icon', 'el-icon-' + iconClass]"
-       @click="handleIconClick"
-      ></i>
+      <template slot="suffix">
+        <i v-if="loading" class="el-select__caret el-input__icon el-icon-loading"></i>
+        <template v-else>
+          <i v-show="!showClose" :class="['el-select__caret', 'el-input__icon', 'el-icon-' + iconClass]"></i>
+          <i v-if="showClose" class="el-select__caret el-input__icon el-icon-circle-close" @click="handleClearClick"></i>
+        </template>
+      </template>
     </el-input>
-      <transition
+    <transition
       name="el-zoom-in-top"
       @before-enter="handleMenuEnter"
       @after-leave="doDestroy">
@@ -144,12 +146,11 @@
   import ElScrollbar from 'element-ui/packages/scrollbar';
   import debounce from 'throttle-debounce/debounce';
   import Clickoutside from 'element-ui/src/utils/clickoutside';
-  import { addClass, removeClass, hasClass } from 'element-ui/src/utils/dom';
   import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event';
   import { t } from 'element-ui/src/locale';
   import scrollIntoView from 'element-ui/src/utils/scroll-into-view';
   import { getValueByPath } from 'element-ui/src/utils/util';
-  import { valueEquals } from 'element-ui/src/utils/util';
+  import { valueEquals, isIE, isEdge } from 'element-ui/src/utils/util';
   import NavigationMixin from './navigation-mixin';
   import { isKorean } from 'element-ui/src/utils/shared';
 
@@ -182,23 +183,22 @@
       },
 
       readonly() {
-        // trade-off for IE input readonly problem: https://github.com/ElemeFE/element/issues/10403
-        const isIE = !this.$isServer && !isNaN(Number(document.documentMode));
-        return !this.filterable || this.multiple || !isIE && !this.visible;
+        return !this.filterable || this.multiple || (!isIE() && !isEdge() && !this.visible);
       },
 
-      iconClass() {
-        if (this.loading) {
-          return '';
-        }
+      showClose() {
+        let hasValue = this.multiple
+          ? Array.isArray(this.value) && this.value.length > 0
+          : this.value !== undefined && this.value !== null && this.value !== '';
         let criteria = this.clearable &&
           !this.selectDisabled &&
           this.inputHovering &&
-          !this.multiple &&
-          this.value !== undefined &&
-          this.value !== null &&
-          this.value !== '';
-        return criteria ? 'circle-close is-show-close' : (this.remote && this.filterable ? '' : 'arrow-up');
+          hasValue;
+        return criteria;
+      },
+
+      iconClass() {
+        return this.remote && this.filterable ? '' : (this.visible ? 'arrow-up is-reverse' : 'arrow-up');
       },
 
       debounce() {
@@ -370,10 +370,6 @@
 
       visible(val) {
         if (!val) {
-          if (this.remote && this.allowCreate) {
-            this.handleOptionSelect({value: this.selectedLabel});
-          }
-          this.handleIconHide();
           this.broadcast('ElSelectDropdown', 'destroyPopper');
           if (this.$refs.input) {
             this.$refs.input.blur();
@@ -382,6 +378,7 @@
           this.previousQuery = null;
           this.selectedLabel = '';
           this.inputLength = 20;
+          this.menuVisibleOnFocus = false;
           this.resetHoverIndex();
           this.$nextTick(() => {
             if (this.$refs.input &&
@@ -402,7 +399,6 @@
             }
           }
         } else {
-          this.handleIconShow();
           this.broadcast('ElSelectDropdown', 'updatePopper');
           if (this.filterable) {
             this.query = this.remote ? '' : this.selectedLabel;
@@ -483,20 +479,6 @@
         }
         if (this.defaultFirstOption && (this.filterable || this.remote) && this.filteredOptionsCount) {
           this.checkDefaultFirstOption();
-        }
-      },
-
-      handleIconHide() {
-        let icon = this.$el.querySelector('.el-input__icon');
-        if (icon) {
-          removeClass(icon, 'is-reverse');
-        }
-      },
-
-      handleIconShow() {
-        let icon = this.$el.querySelector('.el-input__icon');
-        if (icon && !hasClass(icon, 'el-icon-circle-close')) {
-          addClass(icon, 'is-reverse');
         }
       },
 
@@ -601,10 +583,8 @@
         this.softFocus = false;
       },
 
-      handleIconClick(event) {
-        if (this.iconClass.indexOf('circle-close') > -1) {
-          this.deleteSelected(event);
-        }
+      handleClearClick(event) {
+        this.deleteSelected(event);
       },
 
       doDestroy() {
@@ -765,8 +745,9 @@
 
       deleteSelected(event) {
         event.stopPropagation();
-        this.$emit('input', '');
-        this.emitChange('');
+        const value = this.multiple ? [] : '';
+        this.$emit('input', value);
+        this.emitChange(value);
         this.visible = false;
         this.$emit('clear');
       },
@@ -875,7 +856,12 @@
 
       const reference = this.$refs.reference;
       if (reference && reference.$el) {
-        this.initialInputHeight = reference.$el.getBoundingClientRect().height;
+        const sizeMap = {
+          medium: 36,
+          small: 32,
+          mini: 28
+        };
+        this.initialInputHeight = reference.$el.getBoundingClientRect().height || sizeMap[this.selectSize];
       }
       if (this.remote && this.multiple) {
         this.resetInputHeight();

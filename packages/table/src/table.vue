@@ -351,8 +351,8 @@
         this.store.clearSelection();
       },
 
-      clearFilter() {
-        this.store.clearFilter();
+      clearFilter(columnKeys) {
+        this.store.clearFilter(columnKeys);
       },
 
       clearSort() {

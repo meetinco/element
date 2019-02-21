@@ -107,7 +107,7 @@
 
 选项可以是离散的
 
-:::demo 改变`step`的值可以改变步长，通过设置`show-step`属性可以显示间断点
+:::demo 改变`step`的值可以改变步长，通过设置`show-stops`属性可以显示间断点
 ```html
 <template>
   <div class="block">
@@ -225,6 +225,7 @@
 ### Attributes
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
+| value / v-model | 绑定值 | number | — | 0 |
 | min | 最小值 | number | — | 0 |
 | max | 最大值 | number | — | 100 |
 | disabled | 是否禁用 | boolean | — | false |

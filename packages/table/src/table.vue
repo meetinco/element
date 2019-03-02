@@ -41,7 +41,6 @@
         :row-class-name="rowClassName"
         :row-style="rowStyle"
         :highlight="highlightCurrentRow"
-        :auto-checkbox="autoCheckbox"
         :style="{
            width: bodyWidth
         }">
@@ -304,9 +303,6 @@
       defaultExpandAll: Boolean,
 
       defaultSort: Object,
-
-      // 勾选框自动隐藏
-      autoCheckbox: Boolean,
 
       tooltipEffect: String,
 

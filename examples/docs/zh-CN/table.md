@@ -1244,7 +1244,6 @@
   <el-table
     ref="multipleTable"
     :data="tableData3"
-    :auto-checkbox="true"
     tooltip-effect="dark"
     style="width: 100%"
     @selection-change="handleSelectionChange">

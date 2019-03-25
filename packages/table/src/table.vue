@@ -334,13 +334,13 @@
         this.store.commit('setCurrentRow', row);
       },
 
-      toggleRowSelection(row, selected) {
-        this.store.toggleRowSelection(row, selected);
+      toggleRowSelection(row, selected, key) {
+        this.store.toggleRowSelection(row, selected, key);
         this.store.updateAllSelected();
       },
 
-      toggleRowExpansion(row, expanded) {
-        this.store.toggleRowExpansion(row, expanded);
+      toggleRowExpansion(row, expanded, key) {
+        this.store.toggleRowExpansion(row, expanded, key);
       },
 
       clearSelection() {

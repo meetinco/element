@@ -20,17 +20,10 @@ const getKeysMap = function(array, rowKey) {
   return arrayMap;
 };
 
-const toggleRowSelection = function(states, row, selected, key) {
+const toggleRowSelection = function(states, row, selected) {
   let changed = false;
   const selection = states.selection;
-
-  let index = -1;
-  if (key) {
-    index = selection.findIndex(item => item[key] === row[key]);
-  } else {
-    index = selection.indexOf(row);
-  }
-
+  const index = selection.indexOf(row);
   if (typeof selected === 'undefined') {
     if (index === -1) {
       selection.push(row);
@@ -52,18 +45,11 @@ const toggleRowSelection = function(states, row, selected, key) {
   return changed;
 };
 
-const toggleRowExpansion = function(states, row, expanded, key) {
+const toggleRowExpansion = function(states, row, expanded) {
   let changed = false;
   const expandRows = states.expandRows;
-
-  let index = -1;
-  if (key) {
-    index = expandRows.findIndex(item => item[key] === row[key]);
-  } else {
-    index = expandRows.indexOf(row);
-  }
-
   if (typeof expanded !== 'undefined') {
+    const index = expandRows.indexOf(row);
     if (expanded) {
       if (index === -1) {
         expandRows.push(row);
@@ -76,6 +62,7 @@ const toggleRowExpansion = function(states, row, expanded, key) {
       }
     }
   } else {
+    const index = expandRows.indexOf(row);
     if (index === -1) {
       expandRows.push(row);
       changed = true;
@@ -462,15 +449,15 @@ TableStore.prototype.setExpandRowKeys = function(rowKeys) {
   this.states.expandRows = expandRows;
 };
 
-TableStore.prototype.toggleRowSelection = function(row, selected, key) {
-  const changed = toggleRowSelection(this.states, row, selected, key);
+TableStore.prototype.toggleRowSelection = function(row, selected) {
+  const changed = toggleRowSelection(this.states, row, selected);
   if (changed) {
     this.table.$emit('selection-change', this.states.selection ? this.states.selection.slice() : []);
   }
 };
 
-TableStore.prototype.toggleRowExpansion = function(row, expanded, key) {
-  const changed = toggleRowExpansion(this.states, row, expanded, key);
+TableStore.prototype.toggleRowExpansion = function(row, expanded) {
+  const changed = toggleRowExpansion(this.states, row, expanded);
   if (changed) {
     this.table.$emit('expand-change', row, this.states.expandRows);
     this.scheduleLayout();

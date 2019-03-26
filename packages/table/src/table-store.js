@@ -23,6 +23,9 @@ const getKeysMap = function(array, rowKey) {
 const toggleRowSelection = function(states, row, selected) {
   let changed = false;
   const selection = states.selection;
+  if (states.rowKey) {
+    row = states.data.find(item => item[states.rowKey] === row[states.rowKey]);
+  }
   const index = selection.indexOf(row);
   if (typeof selected === 'undefined') {
     if (index === -1) {

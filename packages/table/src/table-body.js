@@ -248,8 +248,13 @@ export default {
 
     getRowClass(row, rowIndex) {
       const classes = ['el-table__row'];
-      if (this.table.highlightCurrentRow && row === this.store.states.currentRow) {
-        classes.push('current-row');
+      if (this.table.highlightCurrentRow) {
+        if (
+          (!this.table.rowKey && row === this.store.states.currentRow) ||
+          (row[this.table.rowKey] === this.store.states.currentRow[this.table.rowKey])
+        ) {
+          classes.push('current-row');
+        }
       }
 
       if (this.stripe && rowIndex % 2 === 1) {

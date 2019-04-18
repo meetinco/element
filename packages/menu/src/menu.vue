@@ -120,7 +120,8 @@
       collapseTransition: {
         type: Boolean,
         default: true
-      }
+      },
+      notActivatedWhileClick: Boolean,
     },
     data() {
       return {
@@ -252,7 +253,9 @@
         const { index, indexPath } = item;
         const oldActiveIndex = this.activeIndex;
 
-        this.activeIndex = item.index;
+        if (!this.notActivatedWhileClick) {
+            this.activeIndex = item.index;
+        }
         this.$emit('select', index, indexPath, item);
 
         if (this.mode === 'horizontal' || this.collapse) {

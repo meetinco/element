@@ -55,7 +55,7 @@
               }
             });
           }
-          
+
           this.editableTabsValue = activeName;
           this.editableTabs = tabs.filter(tab => tab.name !== targetName);
         }
@@ -82,7 +82,7 @@
             }
           });
         }
-        
+
         this.editableTabsValue2 = activeName;
         this.editableTabs2 = tabs.filter(tab => tab.name !== targetName);
       }
@@ -102,7 +102,7 @@
 
 ```html
 <template>
-  <el-tabs v-model="activeName" @tab-click="handleClick" :active-bar-width="30">
+  <el-tabs v-model="activeName" @tab-click="handleClick">
     <el-tab-pane label="用户管理" name="first" :has-notice="true">用户管理</el-tab-pane>
     <el-tab-pane label="配置管理" name="second" :has-notice="true">配置管理</el-tab-pane>
     <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
@@ -282,7 +282,7 @@
               }
             });
           }
-          
+
           this.editableTabsValue = activeName;
           this.editableTabs = tabs.filter(tab => tab.name !== targetName);
         }
@@ -355,7 +355,7 @@
             }
           });
         }
-        
+
         this.editableTabsValue2 = activeName;
         this.editableTabs2 = tabs.filter(tab => tab.name !== targetName);
       }

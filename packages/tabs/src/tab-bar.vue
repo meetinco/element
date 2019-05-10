@@ -35,16 +35,18 @@
               return true;
             } else {
               tabSize = $el[`client${firstUpperCase(sizeName)}`];
-              if (sizeName === 'width' && this.tabs.length > 1) {
-                tabSize -= (index === 0 || index === this.tabs.length - 1) ? 20 : 40;
-              }
+              // 因改为固定宽度下划线选中状态，不需进行padding计算，item内部控制即可
+              // if (sizeName === 'width' && this.tabs.length > 1) {
+              //   tabSize -= (index === 0 || index === this.tabs.length - 1) ? 20 : 40;
+              // }
               return false;
             }
           });
 
-          if (sizeName === 'width' && offset !== 0) {
-            offset += 20;
-          }
+          // 修正固定宽度计算后offset的值
+          // if (sizeName === 'width' && offset !== 0) {
+          //   offset += 20;
+          // }
           const transform = `translate${firstUpperCase(sizeDir)}(${offset}px)`;
           style[sizeName] = tabSize + 'px';
           style.transform = transform;

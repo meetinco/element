@@ -1,100 +1,3 @@
-<script>
-  export default {
-    data() {
-      return {
-        visible: false,
-        visible2: false,
-        gridData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }],
-        gridData2: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          $info: true
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          $positive: true
-        }],
-        gridData3: [{
-          tag: '家',
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          tag: '公司',
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          tag: '公司',
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          tag: '家',
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          tag: '公司',
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          tag: '家',
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          tag: '公司',
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
-      };
-    }
-  };
-</script>
-
-<style>
-  .demo-box.demo-popover {
-    .el-popover + .el-popover {
-      margin-left: 10px;
-    }
-    .el-input {
-      width: 360px;
-    }
-    .el-button {
-      margin-left: 10px;
-    }
-  }
-</style>
-
 ## Popover 弹出框
 
 ### 基础用法
@@ -246,6 +149,7 @@ Popover 的属性与 Tooltip 很类似，它们都是基于`Vue-popper`开发的
 |  popper-options        | [popper.js](https://popper.js.org/documentation.html) 的参数 | Object            | 参考 [popper.js](https://popper.js.org/documentation.html) 文档 | `{ boundariesElement: 'body', gpuAcceleration: false }` |
 | popper-class | 为 popper 添加类名 | String | — | — |
 | open-delay | 触发方式为 hover 时的显示延迟，单位为毫秒 | Number | — | — |
+| tabindex   | Popover 组件的 [tabindex](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex) | number | — | 0 |
 | mask | 是否显示蒙版 | boolean | — | false|
 
 ### Slot

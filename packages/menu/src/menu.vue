@@ -140,7 +140,12 @@
       }
     },
     watch: {
-      defaultActive: 'updateActiveIndex',
+      defaultActive(value){
+        if(!this.items[value]){
+          this.activeIndex = null
+        }
+        this.updateActiveIndex(value)
+      },
 
       defaultOpeneds(value) {
         if (!this.collapse) {
@@ -252,8 +257,9 @@
       handleItemClick(item) {
         const { index, indexPath } = item;
         const oldActiveIndex = this.activeIndex;
+        const hasIndex = item.index !== null;
 
-        if (!this.notActivatedWhileClick) {
+        if (!this.notActivatedWhileClick && hasIndex) {
             this.activeIndex = item.index;
         }
         this.$emit('select', index, indexPath, item);
@@ -262,7 +268,7 @@
           this.openedMenus = [];
         }
 
-        if (this.router) {
+        if (this.router && hasIndex) {
           this.routeToItem(item, (error) => {
             this.activeIndex = oldActiveIndex;
             if (error) console.error(error);

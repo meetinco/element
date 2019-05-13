@@ -50,10 +50,8 @@
       }
     },
 
-    watch: {
-      label() {
-        this.$parent.$forceUpdate();
-      }
+    updated() {
+      this.$parent.$emit('tab-nav-update');
     }
   };
 </script>

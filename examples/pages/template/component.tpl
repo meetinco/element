@@ -107,6 +107,8 @@
       position: fixed;
       right: 100px;
       bottom: 150px;
+      width: 40px;
+      height: 40px;
       size: 40px;
       border-radius: 20px;
       cursor: pointer;
@@ -261,14 +263,6 @@
       bus.$on('navFade', val => {
         this.navFaded = val;
       });
-      window.addEventListener('hashchange', () => {
-        if (location.href.match(/#/g).length < 2) {
-          document.documentElement.scrollTop = document.body.scrollTop = 0;
-          this.renderAnchorHref();
-        } else {
-          this.goAnchor();
-        }
-      });
     },
     mounted() {
       this.componentScrollBar = this.$refs.componentScrollBar;
@@ -284,6 +278,17 @@
     },
     beforeDestroy() {
       this.componentScrollBox.removeEventListener('scroll', this.throttledScrollHandler);
+    },
+    beforeRouteUpdate(to, from, next) {
+      next();
+      setTimeout(() => {
+        if (location.href.match(/#/g).length < 2) {
+          document.documentElement.scrollTop = document.body.scrollTop = 0;
+          this.renderAnchorHref();
+        } else {
+          this.goAnchor();
+        }
+      }, 100);
     }
   };
 </script>

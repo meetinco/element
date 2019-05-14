@@ -10,7 +10,11 @@
 
     props: {
       tabs: Array,
-      activeWidth: [Number, String]
+      activeWidth: [Number, String],
+      hasItemPadding: { // 是否需要el-tabs__item padding(20px) 默认为false
+        type: Boolean,
+        default: true
+      }
     },
 
     inject: ['rootTabs'],
@@ -35,14 +39,16 @@
               return true;
             } else {
               tabSize = $el[`client${firstUpperCase(sizeName)}`];
-              if (sizeName === 'width' && this.tabs.length > 1) {
+              // 因改为固定宽度下划线选中状态，不需进行padding计算，item内部控制即可
+              if (sizeName === 'width' && this.tabs.length > 1 && this.hasItemPadding) {
                 tabSize -= (index === 0 || index === this.tabs.length - 1) ? 20 : 40;
               }
               return false;
             }
           });
 
-          if (sizeName === 'width' && offset !== 0) {
+          // 修正固定宽度计算后offset的值
+          if (sizeName === 'width' && offset !== 0 && this.hasItemPadding) {
             offset += 20;
           }
           const transform = `translate${firstUpperCase(sizeDir)}(${offset}px)`;

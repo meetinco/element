@@ -128,6 +128,20 @@
         const year = this.date.getFullYear();
         return new Date(year, month, 1);
       },
+      getMonthEnd(date) {
+        let year = date.getFullYear();
+        let month = date.getMonth();
+        // 跨年
+        if (month === 11) {
+          year += 1;
+          month = 0;
+        } else {
+          month += 1;
+        }
+        const nextMonth = new Date(year, month, 1);
+        // 下个月的开始 0 点，减去 一秒，就是本月的最后一天的最后一秒
+        return new Date(nextMonth.valueOf() - 1);
+      },
       markRange(minDate, maxDate) {
         minDate = getMonthTimestamp(minDate);
         maxDate = getMonthTimestamp(maxDate) || minDate;
@@ -199,9 +213,11 @@
             this.rangeState.selecting = true;
           } else {
             if (newDate >= this.minDate) {
-              this.$emit('pick', {minDate: this.minDate, maxDate: newDate});
+              const maxDate = this.getMonthEnd(newDate);
+              this.$emit('pick', {minDate: this.minDate, maxDate});
             } else {
-              this.$emit('pick', {minDate: newDate, maxDate: this.minDate});
+              const maxDate = this.getMonthEnd(this.minDate);
+              this.$emit('pick', {minDate: newDate, maxDate});
             }
             this.rangeState.selecting = false;
           }

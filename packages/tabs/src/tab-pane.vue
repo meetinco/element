@@ -52,7 +52,7 @@
 
     watch: {
       label() {
-        this.$parent.$emit('tabLabelChanged');
+        this.$parent.$forceUpdate();
       }
     }
   };

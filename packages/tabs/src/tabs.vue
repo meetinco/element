@@ -93,14 +93,11 @@
         if (this.currentName !== value && this.beforeLeave) {
           const before = this.beforeLeave(value, this.currentName);
           if (before && before.then) {
-            before
-              .then(() => {
-                changeCurrentName();
-                this.$refs.nav && this.$refs.nav.removeFocus();
-              }, () => {
-                // https://github.com/ElemeFE/element/pull/14816
-                // ignore promise rejection in `before-leave` hook
-              });
+            before.then(() => {
+              changeCurrentName();
+
+              this.$refs.nav && this.$refs.nav.removeFocus();
+            });
           } else if (before !== false) {
             changeCurrentName();
           }

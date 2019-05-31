@@ -30,6 +30,10 @@
       },
       type: String,
       stretch: Boolean,
+      longActiveBar: { // 是否需要el-tabs__item padding(20px) 默认为false
+        type: Boolean,
+        default: true
+      },
       activeBarWidth: Number
     },
 
@@ -196,6 +200,7 @@
         scrollNext,
         scrollPrev,
         activeBarWidth,
+        longActiveBar,
         changeTab,
         setFocus,
         removeFocus
@@ -227,7 +232,8 @@
               'el-tabs__notice': pane.hasNotice,
               'is-disabled': pane.disabled,
               'is-closable': closable,
-              'is-focus': this.isFocus
+              'is-focus': this.isFocus,
+              'is-normal-padding': !longActiveBar
             }}
             id={`tab-${tabName}`}
             key={`tab-${tabName}`}
@@ -258,7 +264,7 @@
               role="tablist"
               on-keydown={ changeTab }
             >
-              {!type ? <tab-bar tabs={panes} active-width={activeBarWidth}></tab-bar> : null}
+              {!type ? <tab-bar tabs={panes} active-width={activeBarWidth} long-active-bar={longActiveBar}></tab-bar> : null}
               {tabs}
             </div>
           </div>

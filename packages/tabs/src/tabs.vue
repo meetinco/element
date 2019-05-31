@@ -21,6 +21,10 @@
         default: 'top'
       },
       beforeLeave: Function,
+      longActiveBar: { // 是否需要el-tabs__item padding(20px) 默认为false
+        type: Boolean,
+        default: true
+      },
       stretch: Boolean
     },
 
@@ -118,6 +122,7 @@
         addable,
         activeBarWidth,
         tabPosition,
+        longActiveBar,
         stretch
       } = this;
 
@@ -143,6 +148,7 @@
           type,
           panes,
           stretch,
+          longActiveBar,
           activeBarWidth
         },
         ref: 'nav'
@@ -170,7 +176,7 @@
         </div>
       );
     },
-  
+
     created() {
       if (!this.currentName) {
         this.setCurrentName('0');

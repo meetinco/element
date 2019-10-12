@@ -156,6 +156,9 @@
       const header = (
         <div class={['el-tabs__header', `is-${tabPosition}`]}>
           {newButton}
+          <div class='el-tabs__custom'>
+            {this.$slots.custom}
+          </div>
           <tab-nav { ...navData }></tab-nav>
         </div>
       );

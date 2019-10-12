@@ -42,13 +42,17 @@
     decimal | 小数位数限制 | number | — | null 
 
 6. popover 组件新增 mask 蒙版
+
     Popover Attributes
+    
     参数 | 说明 | 类型 | 可选值 | 默认值
     ----|----|----|----|----
     mask | 是否显示蒙版 | boolean | — | false
 
 7. popover 组件新增 didShow 回调、didHide 回调
+   
    Popover Slot Methods
+   
    传入popover 的 slot 组件，如果实现了 didShow、didHide 方法
    在popover show 和 hide 时会触发
 
@@ -59,16 +63,24 @@
    设置了 mask 属性，并设置 closeOnMask 属性，点击蒙版触发关闭事件
 
 10. switch 新增 loading 态
+    
     Popover Attributes
+    
     参数 | 说明 | 类型 | 可选值 | 默认值
     ----|----|----|----|----
     loading | 是否显示加载态 | boolean | — | false
 
 11. menu 新增 notActivatedWhileClick 属性
+    
     Popover Attributes
+    
     参数 | 说明 | 类型 | 可选值 | 默认值
     ----|----|----|----|----
     notActivatedWhileClick | 点击menu-item的时候，不要高亮该menu-item | boolean | — | false
+
+
+12. tab 新增了 custom slot，可以在tab栏最右侧插入自定义的按钮/输入框
+    [demo](http://localhost:8088/#/zh-CN/component/tabs#ji-chu-yong-fa)
 
 #### 优化类修改：
 1. DatePicker 清除按钮 mouseenter 位置改变

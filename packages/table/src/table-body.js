@@ -171,7 +171,7 @@ export default {
       if (this.table.highlightCurrentRow) {
         if (
           (!this.table.rowKey && row === this.store.states.currentRow) ||
-          (this.store.states.currentRow && row[this.table.rowKey] === this.store.states.currentRow[this.table.rowKey])
+          (row[this.table.rowKey] && this.store.states.currentRow && row[this.table.rowKey] === this.store.states.currentRow[this.table.rowKey])
         ) {
           classes.push('current-row');
         }

@@ -19,6 +19,7 @@
   <span class="demonstration">hover 触发子菜单</span>
   <el-cascader
     v-model="value"
+    :formatMethod="formatMethod"
     :options="options"
     :props="{ expandTrigger: 'hover' }"
     @change="handleChange"></el-cascader>
@@ -229,6 +230,10 @@
     methods: {
       handleChange(value) {
         console.log(value);
+      },
+      formatMethod(value, labels) {
+        console.log('nate-log va', value, labels);
+        return 'failse';
       }
     }
   };

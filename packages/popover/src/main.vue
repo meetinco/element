@@ -59,6 +59,10 @@ export default {
       type: Number,
       default: 0
     },
+    closeDelay: {
+      type: Number,
+      default: 200
+    },
     title: String,
     disabled: Boolean,
     content: String,
@@ -235,9 +239,13 @@ export default {
     },
     handleMouseLeave() {
       clearTimeout(this._timer);
-      this._timer = setTimeout(() => {
+      if (this.closeDelay) {
+        this._timer = setTimeout(() => {
+          this.showPopper = false;
+        }, this.closeDelay);
+      } else {
         this.showPopper = false;
-      }, 200);
+      }
     },
     handleDocumentClick(e) {
       let reference = this.reference || this.$refs.reference;
@@ -266,7 +274,7 @@ export default {
       this.doDestroy();
     },
     cleanup() {
-      if (this.openDelay) {
+      if (this.openDelay || this.closeDelay) {
         clearTimeout(this._timer);
       }
     }

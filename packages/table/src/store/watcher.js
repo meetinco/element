@@ -156,6 +156,10 @@ export default Vue.extend({
     },
 
     toggleRowSelection(row, selected, emitChange = true) {
+      const states = this.states;
+      if (states.rowKey) {
+        row = states.data.find(item => item[states.rowKey] === row[states.rowKey]);
+      }
       const changed = toggleRowStatus(this.states.selection, row, selected);
       if (changed) {
         const newSelection = (this.states.selection || []).slice();

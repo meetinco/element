@@ -208,6 +208,10 @@ export default {
     clearable: Boolean,
     filterable: Boolean,
     filterMethod: Function,
+    formatMethod: {
+      type: Function,
+      default: null
+    },
     separator: {
       type: String,
       default: ' / '
@@ -489,7 +493,9 @@ export default {
       const { checkedValue, config } = this;
       if (!isEmpty(checkedValue)) {
         const node = this.panel.getNodeByValue(checkedValue);
-        if (node && (config.checkStrictly || node.isLeaf)) {
+        if (this.formatMethod) {
+          this.presentText = this.formatMethod(this.checkedValue, node.pathLabels);
+        } else if (node && (config.checkStrictly || node.isLeaf)) {
           this.presentText = node.getText(this.showAllLevels, this.separator);
           return;
         }

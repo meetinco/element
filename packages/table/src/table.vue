@@ -299,6 +299,8 @@
 
       emptyText: String,
 
+      cellEmptyText: String,
+
       expandRowKeys: Array,
 
       defaultExpandAll: Boolean,

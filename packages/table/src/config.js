@@ -1,4 +1,4 @@
-import { getPropByPath } from 'element-ui/src/utils/util';
+import { getPropByPath, isEmpty } from 'element-ui/src/utils/util';
 
 export const cellStarts = {
   default: {
@@ -92,6 +92,11 @@ export function defaultRenderCell(h, { row, column, $index }) {
   const value = property && getPropByPath(row, property).v;
   if (column && column.formatter) {
     return column.formatter(row, column, value, $index);
+  }
+  // 0 也会被 isEmpty 判断成 true，这是不应该的，所以单独判断 number
+  if (typeof value !== 'number' && isEmpty(value)) {
+    console.log('nate-log column', column);
+    return column.emptyText || '++';
   }
   return value;
 }

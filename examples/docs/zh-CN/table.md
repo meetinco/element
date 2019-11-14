@@ -11,11 +11,13 @@
   <template>
     <el-table
       :data="tableData"
+      emptyCellText="**"
       style="width: 100%">
       <el-table-column
         prop="date"
         label="日期"
-        width="180">
+        width="180"
+        emptyText="--">
       </el-table-column>
       <el-table-column
         prop="name"
@@ -34,7 +36,7 @@
       data() {
         return {
           tableData: [{
-            date: '2016-05-02',
+            date: '',
             name: '王小虎',
             address: '上海市普陀区金沙江路 1518 弄'
           }, {
@@ -44,7 +46,7 @@
           }, {
             date: '2016-05-01',
             name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
+            address: ''
           }, {
             date: '2016-05-03',
             name: '王小虎',

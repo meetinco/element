@@ -23,6 +23,7 @@
     参数 | 说明 | 类型 | 可选值 | 默认值
     ----|----|----|----|----
     auto-checkbox | 多选模式下，设置为 true，正常显示 index，鼠标移到 index 上或有选中项， CheckBox 才展示出来  | boolean | -- | false
+    cellEmptyText | 空数据显示的内容（空字符串/空对象/空数组/null/undefined）  | string | -- | ''
 
 
 4. select 组件异步加载数据 loading 态 [demo](http://localhost:8080/#/zh-CN/component/select)

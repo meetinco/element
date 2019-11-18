@@ -95,8 +95,7 @@ export function defaultRenderCell(h, { row, column, $index }) {
   }
   // 0 也会被 isEmpty 判断成 true，这是不应该的，所以单独判断 number
   if (typeof value !== 'number' && isEmpty(value)) {
-    console.log('nate-log column', column);
-    return column.emptyText || '++';
+    return column.emptyText || value;
   }
   return value;
 }
